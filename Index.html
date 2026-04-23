@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nicole — CRE Finance Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:    #1a1814;
+    --paper:  #f5f2ec;
+    --cream:  #ede9e0;
+    --gold:   #b8924a;
+    --gold2:  #d4aa6a;
+    --muted:  #8a8070;
+    --rule:   #d8d0c0;
+    --navy:   #1e2761;
+    --serif:  'Cormorant Garamond', Georgia, serif;
+    --mono:   'DM Mono', 'Courier New', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 48px;
+    background: rgba(245,242,236,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .nav-name {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 140px 64px 80px 72px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+
+  .hero-name {
+    font-size: clamp(56px, 6vw, 88px);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -1px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-title {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--muted);
+    margin-bottom: 40px;
+    font-style: italic;
+    letter-spacing: 0.3px;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    color: var(--ink);
+    max-width: 420px;
+    line-height: 1.85;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 48px;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--rule);
+    padding: 5px 12px;
+    border-radius: 1px;
+    transition: all 0.2s;
+  }
+
+  .tag:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-cta {
+    display: flex; gap: 16px; align-items: center;
+  }
+
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 14px 28px;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    transition: all 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .btn-secondary {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .btn-secondary:hover { color: var(--gold); }
+
+  /* Hero right — decorative panel */
+  .hero-right {
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-right::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      var(--rule) 39px,
+      var(--rule) 40px
+    );
+    opacity: 0.5;
+  }
+
+  .hero-photo-wrap {
+    position: relative; z-index: 1;
+    width: 280px; height: 340px;
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    box-shadow: 12px 16px 0 var(--rule);
+  }
+
+  .hero-photo-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, #ddd8ce, #ccc4b8);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px;
+  }
+
+  .hero-photo-placeholder svg {
+    opacity: 0.3;
+  }
+
+  .hero-photo-placeholder span {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero-stat-strip {
+    position: absolute; bottom: 48px; left: 48px; right: 48px;
+    z-index: 2;
+    display: flex; gap: 32px;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+  }
+
+  .hero-stat { flex: 1; }
+
+  .hero-stat-val {
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .hero-stat-lbl {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ── SECTIONS SHARED ── */
+  section { position: relative; z-index: 1; }
+
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 100px 72px;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 48px;
+    color: var(--ink);
+  }
+
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  /* ── ABOUT ── */
+  .about { background: var(--ink); }
+
+  .about .section-title { color: var(--paper); }
+  .about .section-label { color: var(--gold2); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: #a09888;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.9;
+    margin-bottom: 20px;
+  }
+
+  .about-text p strong { color: var(--paper); font-weight: 400; }
+
+  .about-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 8px;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px solid #2e2c28;
+  }
+
+  .detail-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #5a5650;
+  }
+
+  .detail-val {
+    font-size: 14px;
+    color: #c8bfaf;
+    text-align: right;
+    max-width: 220px;
+  }
+
+  /* ── SKILLS STRIP ── */
+  .skills-strip {
+    background: var(--gold);
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .skills-scroll {
+    display: flex;
+    gap: 0;
+    animation: scrollX 28s linear infinite;
+    white-space: nowrap;
+  }
+
+  .skills-scroll span {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--paper);
+    padding: 14px 24px;
+    border-right: 1px solid rgba(245,242,236,0.3);
+    flex-shrink: 0;
+  }
+
+  @keyframes scrollX {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── DEALS ── */
+  .deals { background: var(--paper); }
+
+  .deals-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  .deal-card {
+    background: var(--paper);
+    padding: 36px 32px;
+    transition: background 0.2s;
+    cursor: default;
+  }
+
+  .deal-card:hover { background: var(--cream); }
+
+  .deal-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .deal-name {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .deal-loc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+
+  .deal-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .deal-m-val {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--navy);
+  }
+
+  .deal-m-lbl {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .deal-thesis {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.7;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+  }
+
+  /* ── EXPERIENCE ── */
+  .experience { background: var(--cream); }
+
+  .exp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .exp-item {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 40px;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+  }
+
+  .exp-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    padding-top: 4px;
+  }
+
+  .exp-role {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .exp-company {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .exp-desc {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* ── CONTACT ── */
+  .contact { background: var(--ink); }
+
+  .contact .section-title { color: var(--paper); }
+  .contact .section-label { color: var(--gold2); }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .contact-text {
+    font-size: 15px;
+    color: #7a7268;
+    font-weight: 300;
+    line-height: 1.9;
+    margin-bottom: 32px;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .contact-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid #2e2c28;
+    text-decoration: none;
+    transition: all 0.2s;
+    group: true;
+  }
+
+  .contact-link-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #5a5650;
+    transition: color 0.2s;
+  }
+
+  .contact-link-val {
+    font-size: 15px;
+    color: #c8bfaf;
+    transition: color 0.2s;
+  }
+
+  .contact-link:hover .contact-link-label,
+  .contact-link:hover .contact-link-val {
+    color: var(--gold);
+  }
+
+  .contact-note {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #3a3830;
+    text-transform: uppercase;
+    margin-top: 32px;
+    line-height: 1.8;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #100f0d;
+    padding: 24px 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer span {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #3a3830;
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 120px 28px 60px; }
+    .section-inner { padding: 70px 28px; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .deals-grid { grid-template-columns: 1fr; }
+    .exp-item { grid-template-columns: 1fr; gap: 8px; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-name">Nicole — CRE Finance</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#deals">Deals</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Queens, New York — Available for hire</div>
+    <h1 class="hero-name">Nicole<br><em>Analyzes</em><br>Real Estate.</h1>
+    <p class="hero-title">CRE Finance · Credit Analysis · CMBS</p>
+    <p class="hero-desc">
+      Finance professional targeting credit analyst and structured finance roles in NYC.
+      Background in commercial real estate project coordination and IT asset finance.
+      Focused on CMBS, REITs, and CRE debt markets.
+    </p>
+    <div class="hero-tags">
+      <span class="tag">CMBS</span>
+      <span class="tag">NOI · DSCR · LTV</span>
+      <span class="tag">Credit Underwriting</span>
+      <span class="tag">ARGUS Enterprise</span>
+      <span class="tag">CRE Debt</span>
+      <span class="tag">Structured Finance</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">Get in Touch</a>
+      <a href="#deals" class="btn-secondary">View Deal Work →</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-placeholder">
+        <!-- Replace this div with: <img src="your-photo.jpg" style="width:100%;height:100%;object-fit:cover"> -->
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="24" r="14" fill="#8a8070"/>
+          <path d="M4 58c0-15.464 12.536-28 28-28s28 12.536 28 28" fill="#8a8070"/>
+        </svg>
+        <span>Add your photo</span>
+      </div>
+    </div>
+
+    <div class="hero-stat-strip">
+      <div class="hero-stat">
+        <div class="hero-stat-val">$341M</div>
+        <div class="hero-stat-lbl">Deal Volume</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">3</div>
+        <div class="hero-stat-lbl">Asset Classes</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">1.44x</div>
+        <div class="hero-stat-lbl">Avg. DSCR</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS TICKER -->
+<div class="skills-strip">
+  <div class="skills-scroll">
+    <span>CMBS Analysis</span><span>NOI Modeling</span><span>DSCR</span><span>LTV</span>
+    <span>Debt Yield</span><span>Cap Rate</span><span>ARGUS Enterprise</span>
+    <span>Credit Underwriting</span><span>Stress Testing</span><span>Rent Roll Review</span>
+    <span>Excel Financial Modeling</span><span>CRE Debt Markets</span><span>REITs</span>
+    <span>Structured Finance</span><span>Lease Analysis</span><span>Market Comps</span>
+    <!-- duplicate for seamless loop -->
+    <span>CMBS Analysis</span><span>NOI Modeling</span><span>DSCR</span><span>LTV</span>
+    <span>Debt Yield</span><span>Cap Rate</span><span>ARGUS Enterprise</span>
+    <span>Credit Underwriting</span><span>Stress Testing</span><span>Rent Roll Review</span>
+    <span>Excel Financial Modeling</span><span>CRE Debt Markets</span><span>REITs</span>
+    <span>Structured Finance</span><span>Lease Analysis</span><span>Market Comps</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-inner">
+    <div class="section-label">— Background</div>
+    <h2 class="section-title">Finance background.<br><em>Real estate focus.</em></h2>
+    <div class="about-grid">
+      <div class="about-text fade-up">
+        <p>
+          I'm a Queens-based finance professional with a <strong>BBA in Finance from Baruch College</strong> and hands-on experience spanning commercial real estate project coordination, IT asset finance, and data analytics.
+        </p>
+        <p>
+          I'm actively targeting <strong>credit analyst and CRE finance roles</strong> — with a specific focus on CMBS, structured finance, and REITs at firms like Fitch Ratings, Moody's, Blackstone, and institutional REITs.
+        </p>
+        <p>
+          Currently building proficiency in <strong>ARGUS Enterprise</strong> and deepening my technical foundation in credit underwriting, NOI modeling, and debt structure analysis through self-directed study and real deal work.
+        </p>
+      </div>
+      <div class="about-details fade-up">
+        <div class="detail-row">
+          <span class="detail-label">Education</span>
+          <span class="detail-val">BBA Finance, Baruch College — GPA 3.4</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Location</span>
+          <span class="detail-val">Queens, New York</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Fellowship</span>
+          <span class="detail-val">COOP Careers Data Analytics Fellow</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Target Roles</span>
+          <span class="detail-val">Credit Analyst · CMBS · CRE Finance · REITs</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Target Firms</span>
+          <span class="detail-val">Fitch · Moody's · Blackstone · PGIM · MetLife</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Tools</span>
+          <span class="detail-val">Excel · ARGUS Enterprise · Python · SQL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEALS -->
+<section class="deals" id="deals">
+  <div class="section-inner">
+    <div class="section-label">— Deal Portfolio</div>
+    <h2 class="section-title">Three deals.<br><em>Three asset classes.</em></h2>
+
+    <div class="deals-grid fade-up">
+
+      <div class="deal-card">
+        <div class="deal-tag">CMBS · Credit Analysis</div>
+        <div class="deal-name">One Liberty Plaza</div>
+        <div class="deal-loc">Financial District, NYC — Class A Office</div>
+        <div class="deal-metrics">
+          <div><div class="deal-m-val">62.4%</div><div class="deal-m-lbl">LTV</div></div>
+          <div><div class="deal-m-val">1.38x</div><div class="deal-m-lbl">DSCR</div></div>
+          <div><div class="deal-m-val">$13.2M</div><div class="deal-m-lbl">NOI</div></div>
+        </div>
+        <div class="deal-thesis">Strong institutional asset. 64% of leases expire post-maturity; stress test holds above 1.10x DSCR through balloon. Rated AAA (Super Senior).</div>
+      </div>
+
+      <div class="deal-card">
+        <div class="deal-tag">Equity · Acquisitions</div>
+        <div class="deal-name">Riverview Crossing</div>
+        <div class="deal-loc">Long Island City, Queens — Multifamily 287 Units</div>
+        <div class="deal-metrics">
+          <div><div class="deal-m-val">68.1%</div><div class="deal-m-lbl">LTV</div></div>
+          <div><div class="deal-m-val">1.22x</div><div class="deal-m-lbl">DSCR</div></div>
+          <div><div class="deal-m-val">$4.65M</div><div class="deal-m-lbl">NOI</div></div>
+        </div>
+        <div class="deal-thesis">Value-add play. In-place rents 12% below market. 5-yr hold projects 1.7x equity multiple and ~14.2% IRR at 5.8% exit cap rate.</div>
+      </div>
+
+      <div class="deal-card">
+        <div class="deal-tag">CMBS · Credit Analysis</div>
+        <div class="deal-name">East Bay Logistics Park</div>
+        <div class="deal-loc">Newark, NJ — Industrial / Last-Mile</div>
+        <div class="deal-metrics">
+          <div><div class="deal-m-val">55.8%</div><div class="deal-m-lbl">LTV</div></div>
+          <div><div class="deal-m-val">1.71x</div><div class="deal-m-lbl">DSCR</div></div>
+          <div><div class="deal-m-val">$6.8M</div><div class="deal-m-lbl">NOI</div></div>
+        </div>
+        <div class="deal-thesis">NNN leases with Amazon + FedEx. Investment-grade tenants, low LTV, high DSCR. Best-in-class industrial credit — rated AA (Senior).</div>
+      </div>
+
+    </div>
+
+    <p style="margin-top:28px; font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase;">
+      Full models available upon request — Excel with NOI builds, stress tests, and sensitivity tables.
+    </p>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div class="section-inner">
+    <div class="section-label">— Work History</div>
+    <h2 class="section-title">Where I've<br><em>been.</em></h2>
+
+    <div class="exp-list">
+
+      <div class="exp-item fade-up">
+        <div class="exp-date">2023 — Present</div>
+        <div>
+          <div class="exp-role">IT Asset & Finance Analyst</div>
+          <div class="exp-company">Inetum</div>
+          <div class="exp-desc">
+            Financial analysis and IT asset lifecycle management. Developed reporting frameworks and financial models to support asset tracking and budget forecasting across enterprise accounts.
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item fade-up">
+        <div class="exp-date">2022 — 2023</div>
+        <div>
+          <div class="exp-role">Project Coordinator</div>
+          <div class="exp-company">Gonzo Construction Corp. — Commercial Real Estate</div>
+          <div class="exp-desc">
+            Coordinated commercial real estate projects from permitting through completion. Managed budgets, vendor relationships, and project timelines on active NYC construction sites.
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item fade-up">
+        <div class="exp-date">2022</div>
+        <div>
+          <div class="exp-role">Data Analytics Fellow</div>
+          <div class="exp-company">COOP Careers</div>
+          <div class="exp-desc">
+            Completed intensive data analytics fellowship focused on Python, SQL, and data visualization. Applied analytical methods to real-world business and financial datasets.
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item fade-up">
+        <div class="exp-date">2022</div>
+        <div>
+          <div class="exp-role">BBA, Finance</div>
+          <div class="exp-company">Baruch College, CUNY — GPA 3.4</div>
+          <div class="exp-desc">
+            Coursework in corporate finance, financial modeling, investments, and real estate finance. Active participant in finance-related student organizations.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-inner">
+    <div class="section-label">— Get in Touch</div>
+    <h2 class="section-title">Open to the<br><em>right opportunity.</em></h2>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-text">
+          I'm actively exploring credit analyst, CMBS, and CRE finance roles in New York City.
+          If you're at Fitch, Moody's, Blackstone, PGIM, or a REIT — I'd love to connect.
+          Recruiters and hiring managers welcome.
+        </p>
+        <div class="contact-note">
+          Available immediately<br>
+          New York City — open to hybrid or in-office
+        </div>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:your.email@email.com" class="contact-link">
+          <!-- Replace your.email@email.com with your real email -->
+          <span class="contact-link-label">Email</span>
+          <span class="contact-link-val">your.email@email.com</span>
+        </a>
+        <a href="https://linkedin.com/in/yourprofile" target="_blank" class="contact-link">
+          <!-- Replace yourprofile with your LinkedIn username -->
+          <span class="contact-link-label">LinkedIn</span>
+          <span class="contact-link-val">linkedin.com/in/yourprofile</span>
+        </a>
+        <a href="#" class="contact-link">
+          <!-- Replace # with a link to your Google Drive portfolio folder -->
+          <span class="contact-link-label">Portfolio Models</span>
+          <span class="contact-link-val">Google Drive — Excel + Memos</span>
+        </a>
+        <a href="#" class="contact-link">
+          <span class="contact-link-label">Location</span>
+          <span class="contact-link-val">Queens, New York City</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>Nicole — CRE Finance Analyst — Queens, NY</span>
+  <span>BBA Finance, Baruch College · COOP Careers Fellow</span>
+</footer>
+
+<script>
+  // Fade-up on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Stagger deal cards
+  document.querySelectorAll('.deal-card').forEach((card, i) => {
+    card.style.transitionDelay = `${i * 0.12}s`;
+    card.classList.add('fade-up');
+    observer.observe(card);
+  });
+</script>
+</body>
+</html>
